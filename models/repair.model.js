@@ -10,8 +10,7 @@ const Repair = db.define('repair', {
   },
   date: {
     allowNull: false,
-    type: DataTypes.DATE,
-    defaultValue: Date.UTC(Date.now())
+    type: DataTypes.DATE
   },
   status: {
     defaultValue: 'pending',
@@ -23,4 +22,4 @@ const Repair = db.define('repair', {
   }
 })
 
-module.export = { Repair }
+module.exports = { Repair }

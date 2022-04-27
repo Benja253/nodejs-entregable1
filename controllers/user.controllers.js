@@ -16,9 +16,9 @@ const getAllUsers = async (req, res) => {
 
 const createUser = async (req, res) => {
   try {
-    const { name, email } = req.body
+    const { name, email, password, role } = req.body
 
-    const newUser = await User.create({ name, email })
+    const newUser = await User.create({ name, email, password, role })
 
     res.status(201).json({ newUser })
   } catch (error) {

@@ -1,4 +1,4 @@
-const { Repair } = require('../models/user.model')
+const { Repair } = require('../models/repair.model')
 
 // Controller route /api/v1/
 const getAllRepairs = async (req, res) => {
