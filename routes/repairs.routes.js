@@ -1,4 +1,5 @@
 const express = require('express')
+const { repairExists } = require('../middlewares/repairs.middlewares')
 const { 
   getAllRepairs, 
   createRepair, 
@@ -6,16 +7,19 @@ const {
   updateRepairById,
   deleteRepair
 } = require('../controllers/repair.controllers')
+const { createRepairValidations, checkValidations } = require('../middlewares/validations.middleware')
 
-const RepairsRouter = express.Router()
+const repairsRouter = express.Router()
 
-RepairsRouter.route('/')
+repairsRouter.route('/')
   .get(getAllRepairs)
-  .post(createRepair)
+  .post(createRepairValidations, checkValidations, createRepair)
 
-RepairsRouter.route('/:id')
+repairsRouter
+  .use('/:id', repairExists)
+  .route('/:id')
   .get(getRepairById)
   .patch(updateRepairById)
   .delete(deleteRepair)
 
-module.exports = { RepairsRouter }
+module.exports = { repairsRouter }

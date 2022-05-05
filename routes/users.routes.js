@@ -1,4 +1,5 @@
 const express = require('express')
+const { userExists } = require('../middlewares/users.middlewares')
 const { 
   getAllUsers, 
   createUser, 
@@ -6,14 +7,18 @@ const {
   updateUserById,
   deleteUser
 } = require('../controllers/user.controllers')
+const { createUserValidations, checkValidations } = require('../middlewares/validations.middleware')
 
 const usersRouter = express.Router()
 
-usersRouter.route('/')
+usersRouter
+  .route('/')
   .get(getAllUsers)
-  .post(createUser)
+  .post(createUserValidations, checkValidations, createUser)
 
-usersRouter.route('/:id')
+usersRouter
+  .use('/:id', userExists)
+  .route('/:id')
   .get(getUserById)
   .patch(updateUserById)
   .delete(deleteUser)

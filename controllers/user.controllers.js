@@ -1,103 +1,54 @@
 const { User } = require('../models/user.model')
+const { catchAsync } = require('../utils/catchAsync')
 
 // Controller route /api/v1/
-const getAllUsers = async (req, res) => {
-  try {
-    const users = await User.findAll()
-  
-    res.status(200).json({
-      users
-    })
+const getAllUsers = catchAsync(async(req, res, next) => {
+  const users = await User.findAll()
 
-  } catch (error) {
-    console.log(error)
-  }
-}
+  res.status(200).json({
+    users
+  })
+})
 
-const createUser = async (req, res) => {
-  try {
-    const { name, email, password, role } = req.body
+const createUser = catchAsync(async (req, res, next) => {
+  const { name, email, password, role } = req.body
 
-    const newUser = await User.create({ name, email, password, role })
+  const newUser = await User.create({ name, email, password, role })
 
-    res.status(201).json({ newUser })
-  } catch (error) {
-    console.log(error)
-  }
-}
+  res.status(201).json({ newUser })
+})
 
 
 // Controller route /api/v1/:id
-const getUserById = async (req, res) => {
-  try {
-    const { id } = req.params
+const getUserById = catchAsync(async(req, res, next) => {
+  const { user } = req
 
-    const user = await User.findOne({ where: { id } })
+  res.status(200).json({
+    user
+  })
+})
 
-    if(!user) {
-      return res.status(404).json({
-        status: 'error',
-        message: 'User not found given that id'
-      })
-    }
+const updateUserById = catchAsync(async(req, res, next) => {
+  const { user } = req
 
-    res.status(200).json({
-      user
-    })
-  } catch (error) {
-    console.log(error)
-  }
-}
+  const { name, email } = req.body
+  
+  await user.update({ name, email })
 
-const updateUserById = async (req, res) => {
-  try {
-    const { id } = req.params
+  res.status(200).json({
+    user
+  })
+})
 
-    const user = await User.findOne({ where: { id } })
-    
-    if(!user) {
-      return res.status(404).json({
-        status: 'error',
-        message: 'User not found given that id'
-      })
-    }
+const deleteUser = catchAsync(async(req, res, next) => {
+  const { user } = req
 
-    const { name, email } = req.body
-    
-    await user.update({ name, email })
+  await user.update({ status: 'deleted' })
 
-    res.status(200).json({
-      user
-    })
-    
-  } catch (error) {
-    console.log(error)
-  }
-}
-
-const deleteUser = async (req, res) => {
-  try {
-    const { id } = req.params
-
-    const user = await User.findOne({ where: { id } })
-    
-    if(!user) {
-      return res.status(404).json({
-        status: 'error',
-        message: 'User not found given that id'
-      })
-    }
-
-    await user.update({ status: 'deleted' })
-
-    res.status(200).json({
-      message: 'User was deleted successfully'
-    })
-
-  } catch (error) {
-    console.log(error)
-  }
-}
+  res.status(200).json({
+    message: 'User was deleted successfully'
+  })
+})
 
 module.exports = {
   getAllUsers,

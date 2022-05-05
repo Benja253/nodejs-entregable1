@@ -1,25 +1,17 @@
 const express = require('express')
-const { db } = require('./utils/database')
 const { usersRouter } = require('./routes/users.routes')
-const { RepairsRouter } = require('./routes/repairs.routes')
-
+const { repairsRouter } = require('./routes/repairs.routes')
+const { globalErrorHandler } = require('./controllers/errors.controllers')
 
 const app = express()
 
 app.use(express.json())
 
-db.authenticate()
-  .then(() => console.log('Database authenticated'))
-  .catch(err => console.log(err));
-
-db.sync()
-  .then(() => console.log('Database authenticated'))
-  .catch(err => console.log(err));
-
 app.use('/api/v1/users', usersRouter);
-app.use('/api/v1/repairs', RepairsRouter);
+app.use('/api/v1/repairs', repairsRouter);
 
-const PORT = 3999
-app.listen(PORT, () => {
-  console.log(`Express app running on port: ${PORT}`)
-})
+app.use('*', globalErrorHandler)
+
+module.exports = {
+  app
+}
